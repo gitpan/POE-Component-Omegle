@@ -6,7 +6,7 @@ use warnings;
 
 use POE;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 sub new {
     my $class = shift;
@@ -96,58 +96,58 @@ POE::Component::Omegle - Simple POE wrapper around WWW::Omegle
 
 =head1 SYNOPSIS
 
-use POE;
+	use POE;
 
-POE::Session->create(
-                     package_states => [
-                                        OMPoeBot => [qw/
-                                                     _start om_connect om_chat om_disconnect poke
-                                                     /],
-                                        ],
-                     );
+	POE::Session->create(
+	                     package_states => [
+	                                        OMPoeBot => [qw/
+	                                                     _start om_connect om_chat om_disconnect poke
+	                                                     /],
+	                                        ],
+	                     );
 
-$poe_kernel->run;
+	$poe_kernel->run;
 
-package OMPoeBot;
-use POE qw/Component::Omegle/;
+	package OMPoeBot;
+	use POE qw/Component::Omegle/;
 
-sub _start {
-    my ($heap) = $_[HEAP];
+	sub _start {
+	    my ($heap) = $_[HEAP];
 
-    my $om = POE::Component::Omegle->new;
+	    my $om = POE::Component::Omegle->new;
 
-    $om->set_callback(connect    => 'om_connect');
-    $om->set_callback(chat       => 'om_chat');
-    $om->set_callback(disconnect => 'om_disconnect');
+	    $om->set_callback(connect    => 'om_connect');
+	    $om->set_callback(chat       => 'om_chat');
+	    $om->set_callback(disconnect => 'om_disconnect');
 
-    $heap->{om} = $om;
+	    $heap->{om} = $om;
     
-    $om->start_chat;
-    $poe_kernel->delay_add(poke => 0.1, $om);
-}
+	    $om->start_chat;
+	    $poe_kernel->delay_add(poke => 0.1, $om);
+	}
 
-sub poke {
-    my ($kernel, $heap, $om) = @_[KERNEL, HEAP, ARG0];
+	sub poke {
+	    my ($kernel, $heap, $om) = @_[KERNEL, HEAP, ARG0];
 
-    $om->poke;
-    $poe_kernel->delay_add(poke => 0.1, $om);
-}
+	    $om->poke;
+	    $poe_kernel->delay_add(poke => 0.1, $om);
+	}
 
-sub om_connect {
-    my $om = $_[HEAP]->{om};
+	sub om_connect {
+	    my $om = $_[HEAP]->{om};
 
-    print "Stranger connected\n";
-    $om->say("Yo homie! Where you at?");
-}
+	    print "Stranger connected\n";
+	    $om->say("Yo homie! Where you at?");
+	}
 
-sub om_chat {
-    my ($cb_args) = $_[ARG1];
-    my ($om, $chat) = @$cb_args;
+	sub om_chat {
+	    my ($cb_args) = $_[ARG1];
+	    my ($om, $chat) = @$cb_args;
 
-    print ">> $chat\n";
-}
+	    print ">> $chat\n";
+	}
 
-sub om_disconnect { print "Stranger disconnected\n"; }
+	sub om_disconnect { print "Stranger disconnected\n"; }
 
 
 

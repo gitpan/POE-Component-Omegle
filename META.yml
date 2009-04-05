@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               POE-Component-Omegle
-version:            0.01
+version:            0.02
 abstract:           Simple POE wrapper around WWW::Omegle
 author:
     - Mischa Spiegelmock <revmischa@cpan.org>
